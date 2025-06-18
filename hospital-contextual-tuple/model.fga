@@ -1,0 +1,28 @@
+model
+schema 1.1
+
+type user
+
+type health_record
+    relations
+        define view_in_detail: attending_physician 
+        define attending_physician: [user] or attending_physician from patient
+        define view_metadata: attending_physician or view_metadata from patient
+        define patient: [patient]
+
+type hospital
+    relations
+        define physician: [user]
+        define approved_emergency_shift: [emergency_shift#shift]
+
+type patient
+    relations
+        define view_in_detail: attending_physician 
+        define admitted_hospital: [hospital]
+        define admitted_emergency: [hospital]
+        define view_metadata: [user, hospital#physician]
+        define attending_physician: [user] or approved_emergency_shift from admitted_emergency
+
+type emergency_shift
+    relations
+        define shift: [user]

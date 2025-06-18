@@ -1,0 +1,39 @@
+# Joe is a physician at hospital:VU
+- user: user:joe
+  relation: physician
+  object: hospital:VU
+
+# Karen is a physician at hospital:VU
+- user: user:karen
+  relation: physician
+  object: hospital:VU
+
+# hostpital:VU#physician has metadata access to patient:jane
+- user: hospital:VU#physician
+  relation: view_metadata
+  object: patient:jane
+
+# Jane has a health record for a first treatment
+- user: patient:jane
+  relation: patient
+  object: health_record:treatment1
+
+# Jane has a health record for a second treatment
+- user: patient:jane
+  relation: patient
+  object: health_record:treatment2
+
+# Karen is the attending_physician of patient:jane
+- user: user:karen
+  relation: attending_physician
+  object: patient:jane
+
+# Joe is the attending physician for health_record:treatment1
+- user: user:joe
+  relation: attending_physician
+  object: health_record:treatment1
+
+# Jane is the atmitted to the hospital:VU
+- user: hospital:VU
+  relation: admitted_hospital
+  object: patient:jane

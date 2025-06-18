@@ -5,7 +5,7 @@ type user
 
 type health_record
     relations
-        define view_in_detail: attending_physician
+        define view_in_detail: attending_physician 
         define attending_physician: [user] or attending_physician from patient
         define view_metadata: attending_physician or view_metadata from patient
         define patient: [patient]
@@ -13,9 +13,19 @@ type health_record
 type hospital
     relations
         define physician: [user]
+        define approved_emergency_shift: [emergency_shift#shift]
 
 type patient
     relations
-        define view_in_detail: attending_physician  
+        define view_in_detail: attending_physician 
+        define admitted_hospital: [hospital]
         define view_metadata: [user, hospital#physician]
-        define attending_physician: [user]
+        define attending_physician: [user] or approved_emergency_shift from admitted_hospital
+
+#   condition emergency_shift(current_time: timestamp, grant_time: timestamp, grant_duration: duration) {
+#      current_time < grant_time + grant_duration && current_time > grant_time
+#   }
+
+type emergency_shift
+    relations
+        define shift: [user]

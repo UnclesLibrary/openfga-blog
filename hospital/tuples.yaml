@@ -32,3 +32,8 @@
 - user: user:joe
   relation: attending_physician
   object: health_record:treatment1
+
+# Jane is the atmitted to the hospital:VU
+- user: hospital:VU
+  relation: admitted_hospital
+  object: patient:jane

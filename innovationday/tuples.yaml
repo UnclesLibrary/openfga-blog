@@ -1,0 +1,4 @@
+# Joe is a physician at hospital:VU
+- user: user:koen
+  relation: owner
+  object: document:doc1

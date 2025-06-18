@@ -54,3 +54,9 @@ tests:
         assertions:
           view_in_detail: [health_record:treatment1]
           view_metadata: [health_record:treatment1, health_record:treatment2]
+  - name: "Patient Jane is currently in the VU hospital"
+    check:
+      - user: hospital:VU
+        object: patient:jane
+        assertions:
+          admitted_hospital: true

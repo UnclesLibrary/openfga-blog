@@ -1,0 +1,11 @@
+name: Innovation day
+model_file: ./model.fga
+tuple_file: ./tuples.yaml
+
+tests:
+  - name: "user erick is owner of document:doc1"
+    check: 
+      - user: user:erick
+        object: document:doc1
+        assertions: 
+          owner: true

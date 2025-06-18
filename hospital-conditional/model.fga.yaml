@@ -1,0 +1,92 @@
+name: Health Care
+model_file: ./model.fga
+tuple_file: ./tuples.yaml
+
+tests:
+  - name: "joe can view metadata for jane because he is a physician at the hospital"
+    check: 
+      - user: user:joe
+        object: patient:jane
+        assertions: 
+          view_metadata: true
+          view_in_detail: false
+
+  - name: "karen can view all patient data for jane because he is the attending_physician of jane"
+    check: 
+      - user: user:karen
+        object: patient:jane
+        assertions: 
+          view_metadata: true
+          view_in_detail: true
+    
+  - name: "joe can view all for treatment1 because he is the attending_physician of the health record"
+    check: 
+      - user: user:joe
+        object: health_record:treatment1
+        assertions: 
+          view_metadata: true
+          view_in_detail: true
+
+  - name: "joe can view metadata for treatment2 because he is a physician of the hospital"
+    check: 
+      - user: user:joe
+        object: health_record:treatment2
+        assertions: 
+          view_metadata: true
+          view_in_detail: false
+  - name: "Jane has 2 health_records"
+    list_objects:
+      - user: patient:jane
+        type: health_record
+        assertions:
+          patient: [health_record:treatment1, health_record:treatment2]
+  - name: "Karen sees 2 health_records"
+    list_objects:
+      - user: user:karen
+        type: health_record
+        assertions:
+          view_in_detail: [health_record:treatment1, health_record:treatment2]
+          view_metadata: [health_record:treatment1, health_record:treatment2]
+  - name: "Joe sees 1 health_record"
+    list_objects:
+      - user: user:joe
+        type: health_record
+        assertions:
+          view_in_detail: [health_record:treatment1]
+          view_metadata: [health_record:treatment1, health_record:treatment2]
+  - name: "Patient Jane is currently in the VU hospital"
+    check:
+      - user: hospital:VU
+        object: patient:jane
+        assertions:
+          admitted_hospital: true
+  - name: "User Joe is not patient Jane's attending physician"
+    check:
+      - user: user:joe
+        object: patient:jane
+        assertions:
+          attending_physician: false
+  - name: "User Joe is patient Jane's attending physician, when jane is in the emergency and joe is having an ER shift"
+    tuples:
+    - user: emergency_shift:now#shift
+      relation: approved_emergency_shift
+      object: hospital:VU
+    - user: user:joe
+      relation: shift
+      object: emergency_shift:now
+      condition:
+        name: temporal_grant
+        context:
+          grant_time: "2024-04-08T00:09:50Z"
+          grant_duration: "8h"
+    - user: hospital:VU
+      relation: admitted_emergency
+      object: patient:jane
+
+    check:
+      - user: user:joe
+        object: patient:jane
+        context:
+          current_time: "2024-04-08T02:09:50Z"
+        assertions:
+          attending_physician: true
